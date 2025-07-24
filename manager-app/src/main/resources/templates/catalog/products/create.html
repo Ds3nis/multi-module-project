@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Create product</title>
+</head>
+<body>
+<main class="main">
+    <div class="container">
+        <h1>Create new product</h1>
+        <div class="errors" data-th-if="${errors}">
+            <ul class="errors__list">
+                <li class="errors__item" data-th-each="error : ${errors}" data-th-text="${error}">
+
+                </li>
+            </ul>
+        </div>
+        <form method="post" class="create-form" data-th-actio="@{/catalog/products/create}">
+            <input type="text" name="title" placeholder="Enter title" data-th-value="${newProductDto?.title()}">
+            <textarea name="details" placeholder="Enter details" data-th-text="${newProductDto?.details()}"></textarea>
+            <button type="submit" class="create-form__btn">Create</button>
+            <a class="form__link" data-th-href="@{/catalog/products/get}">Move to catalog</a>
+        </form>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Edit product</title>
+</head>
+<body>
+<main class="main">
+    <div class="container">
+        <h1>Edit product [[${product.title}]]</h1>
+        <div class="errors" data-th-if="${errors}">
+            <ul class="errors__list">
+                <li class="errors__item" data-th-each="error : ${errors}" data-th-text="${error}">
+
+                </li>
+            </ul>
+        </div>
+        <form method="post" class="create-form" data-th-action="@{/catalog/products/{productId}/edit(productId=${product.getId()})}">
+            <input type="text" name="title" data-th-value="${product.getTitle()}" placeholder="Enter title">
+            <textarea name="details" data-th-text="${product.getDetails()}" placeholder="Enter details"></textarea>
+            <button type="submit" class="create-form__btn">Edit</button>
+            <a class="form__link" data-th-href="@{/catalog/products/{productId}(productId=${product.getId()})}">Move to product</a>
+        </form>
+
+        <form method="post" class="delete-form" data-th-action="@{/catalog/products/{productId}/delete(productId=${product.getId()})}">
+            <button type="submit" class="delete-form__delete">Delete</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

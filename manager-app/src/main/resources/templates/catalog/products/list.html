@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Catalog</title>
+</head>
+<body>
+<main class="main">
+    <div class="container">
+        <h1>Catalog</h1>
+        <a class="link" data-th-href="@{/catalog/products/create}">Create product</a>
+        <ul class="product-catalog">
+            <li class="product-catalog__item" data-th-each="product : ${products}">
+                <div class="product-card">
+                    <img class="product-img" src="">
+                    <span class="id" data-th-text="${product.getId()}"></span>
+                    <a data-th-href="@{/catalog/products/{productId}(productId=${product.getId()})}">
+                        <p class="product-name" data-th-text="${product.getTitle()}" ></p>
+                    </a>
+                    <p class="product-details" data-th-text="${product.getDetails()}"></p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</main>
+</body>
+</html>

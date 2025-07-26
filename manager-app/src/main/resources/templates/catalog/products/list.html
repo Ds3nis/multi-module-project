@@ -16,11 +16,11 @@
             <li class="product-catalog__item" data-th-each="product : ${products}">
                 <div class="product-card">
                     <img class="product-img" src="">
-                    <span class="id" data-th-text="${product.getId()}"></span>
-                    <a data-th-href="@{/catalog/products/{productId}(productId=${product.getId()})}">
-                        <p class="product-name" data-th-text="${product.getTitle()}" ></p>
+                    <span class="id" data-th-text="${product.id()}"></span>
+                    <a data-th-href="@{/catalog/products/{productId}(productId=${product.id()})}">
+                        <p class="product-name" data-th-text="${product.title()}" ></p>
                     </a>
-                    <p class="product-details" data-th-text="${product.getDetails()}"></p>
+                    <p class="product-details" data-th-text="${product.details()}"></p>
                 </div>
             </li>
         </ul>

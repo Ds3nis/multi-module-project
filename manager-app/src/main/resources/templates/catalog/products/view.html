@@ -10,11 +10,11 @@
 <body>
 <main class="main">
     <div class="container">
-        <h1 data-th-text="${product.getId()}">View product</h1>
+        <h1 data-th-text="${product.id()}">View product</h1>
         <a class="link" data-th-href="@{/catalog/products/get}">Product catalog</a>
-        <h2 class="product-title" data-th-text="${product.getTitle()}"></h2>
-        <p class="product-details" data-th-text="${product.getDetails()}"></p>
-        <a class="edit-link" data-th-href="@{/catalog/products/{productId}/edit(productId=${product.getId()})}">Edit product</a>
+        <h2 class="product-title" data-th-text="${product.title()}"></h2>
+        <p class="product-details" data-th-text="${product.details()}"></p>
+        <a class="edit-link" data-th-href="@{/catalog/products/{productId}/edit(productId=${product.id()})}">Edit product</a>
     </div>
 </main>
 </body>

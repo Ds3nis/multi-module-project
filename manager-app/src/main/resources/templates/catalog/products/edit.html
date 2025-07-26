@@ -18,14 +18,14 @@
                 </li>
             </ul>
         </div>
-        <form method="post" class="create-form" data-th-action="@{/catalog/products/{productId}/edit(productId=${product.getId()})}">
-            <input type="text" name="title" data-th-value="${product.getTitle()}" placeholder="Enter title">
-            <textarea name="details" data-th-text="${product.getDetails()}" placeholder="Enter details"></textarea>
+        <form method="post" class="create-form" data-th-action="@{/catalog/products/{productId}/edit(productId=${product.id()})}">
+            <input type="text" name="title" data-th-value="${product.title()}" placeholder="Enter title">
+            <textarea name="details" data-th-text="${product.details()}" placeholder="Enter details"></textarea>
             <button type="submit" class="create-form__btn">Edit</button>
-            <a class="form__link" data-th-href="@{/catalog/products/{productId}(productId=${product.getId()})}">Move to product</a>
+            <a class="form__link" data-th-href="@{/catalog/products/{productId}(productId=${product.id()})}">Move to product</a>
         </form>
 
-        <form method="post" class="delete-form" data-th-action="@{/catalog/products/{productId}/delete(productId=${product.getId()})}">
+        <form method="post" class="delete-form" data-th-action="@{/catalog/products/{productId}/delete(productId=${product.id()})}">
             <button type="submit" class="delete-form__delete">Delete</button>
         </form>
     </div>

@@ -1,21 +1,10 @@
 package ag.selm.manager.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public record Product(
 
-import java.util.Objects;
+        int id,
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class Product {
+        String title,
 
-    private Integer id;
-
-    private String title;
-
-    private String details;
-
+        String details) {
 }
-

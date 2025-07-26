@@ -1,10 +1,10 @@
 package ag.selm.manager.controller;
 
+import ag.selm.manager.client.BadRequestException;
+import ag.selm.manager.client.ProductsRestClient;
 import ag.selm.manager.dto.UpdateProductDto;
 import ag.selm.manager.entity.Product;
-import ag.selm.manager.service.ProductService;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Locale;
 import java.util.NoSuchElementException;
@@ -23,7 +24,7 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductsRestClient productService;
 
     private final MessageSource messageSource;
 
@@ -43,22 +44,21 @@ public class ProductController {
     }
 
     @PostMapping("edit")
-    public String updateProduct(@ModelAttribute(value = "product", binding = false) Product product, @Validated UpdateProductDto updateProductDto,
-                                BindingResult bindingResult, Model model){
-        if(bindingResult.hasErrors()){
+    public String updateProduct(@ModelAttribute(value = "product", binding = false) Product product, UpdateProductDto updateProductDto,
+                                Model model){
+        try {
+            productService.updateProduct(product.id(), updateProductDto);
+            return "redirect:/catalog/products/%d".formatted(product.id());
+        }catch (BadRequestException ex){
             model.addAttribute("updateProductDto", updateProductDto);
-            model.addAttribute("errors", bindingResult.getAllErrors().stream().
-                    map(objectError -> objectError.getDefaultMessage()).toList());
+            model.addAttribute("errors", ex.getErrors());
             return "catalog/products/edit";
-        }else{
-            productService.updateProduct(product.getId(), updateProductDto);
-            return "redirect:/catalog/products/%d".formatted(product.getId());
         }
     }
 
     @PostMapping("delete")
     public String deleteProduct(@ModelAttribute("product") Product product){
-        productService.deleteProduct(product.getId());
+        productService.deleteProduct(product.id());
         return "redirect:/catalog/products/get";
     }
 
@@ -68,5 +68,6 @@ public class ProductController {
         model.addAttribute("message", messageSource.getMessage(ex.getMessage(), null, locale));
         return "catalog/products/notfound";
     }
+
 
 }

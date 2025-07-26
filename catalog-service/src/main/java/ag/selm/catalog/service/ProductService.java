@@ -1,9 +1,9 @@
-package ag.selm.manager.service;
+package ag.selm.catalog.service;
 
-import ag.selm.manager.dto.NewProductDto;
-import ag.selm.manager.dto.UpdateProductDto;
-import ag.selm.manager.entity.Product;
-import ag.selm.manager.repository.InMemoryProductRepository;
+import ag.selm.catalog.dto.NewProductDto;
+import ag.selm.catalog.dto.UpdateProductDto;
+import ag.selm.catalog.entity.Product;
+import ag.selm.catalog.repository.InMemoryProductRepository;
 
 import java.util.List;
 

@@ -1,17 +1,11 @@
 package ag.selm.catalog.repository;
 
 import ag.selm.catalog.entity.Product;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductRepository {
+public interface ProductRepository extends CrudRepository<Product, Integer> {
 
-    Optional<List<Product>> findAll();
-
-    void save(Product product);
-
-    Optional<Product> findById(int id);
-
-    void deleteById(int id);
 }

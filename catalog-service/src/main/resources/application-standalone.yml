@@ -1,0 +1,19 @@
+server:
+  port: 8080
+spring:
+  messages:
+    basename: messages
+  datasource:
+    url: jdbc:postgresql://localhost:5432/catalog
+    username: root
+    password: postgresql-db
+  flyway:
+    schemas:
+      -public
+      -catalog
+
+#    url: jdbc:mysql://localhost:3306/catalog
+#    username: root
+#    password: mysqlhudadenis2025
+
+

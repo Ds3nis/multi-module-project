@@ -31,7 +31,7 @@ public class ProductsRestController {
 
 
     @GetMapping("get")
-    public List<Product> getProducts(){
+    public Iterable<Product> getProducts(){
         return productService.findAllProducts();
     }
 

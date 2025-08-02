@@ -1,7 +1,10 @@
 selmag:
   service:
     catalog:
-      uri: "http://localhost:8080"
+      uri: http://localhost:8080
+      username: catalog_service_user
+      password: password
+      registration-id: keycloak
 
 server:
   port: 8081
@@ -9,3 +12,28 @@ server:
 spring:
   messages:
     basename: messages
+  datasource:
+    url: jdbc:postgresql://localhost:5433/user_management
+    username: manager
+    password: manager_pass
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8082/realms/selmag
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: manager-app
+            client-secret: 6Rp21gKAXNza3sKsDIJaXXo8veF34FUf
+            scope:
+              - openid
+              - view-catalog
+              - edit-catalog
+              - microprofile-jwt
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG

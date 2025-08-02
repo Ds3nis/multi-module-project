@@ -11,6 +11,22 @@ spring:
     schemas:
       -public
       -catalog
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8082/realms/selmag
+
+#    user:
+#      name: catalog_service_user
+#      password: '{noop}password'
+#      roles:
+#        - SERVICE
+
 
 #    url: jdbc:mysql://localhost:3306/catalog
 #    username: root

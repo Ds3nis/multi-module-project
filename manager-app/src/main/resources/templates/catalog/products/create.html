@@ -18,7 +18,7 @@
                 </li>
             </ul>
         </div>
-        <form method="post" class="create-form" data-th-actio="@{/catalog/products/create}">
+        <form method="post" class="create-form" data-th-action="@{/catalog/products/create}">
             <input type="text" name="title" placeholder="Enter title" data-th-value="${newProductDto?.title()}">
             <textarea name="details" placeholder="Enter details" data-th-text="${newProductDto?.details()}"></textarea>
             <button type="submit" class="create-form__btn">Create</button>

@@ -49,7 +49,7 @@ public class ProductsRestController {
             Product product = productService.createProduct(newProductDto);
             ResponseProduct responseProduct = new ResponseProduct(product.getId(),
                     product.getTitle(), product.getDetails());
-            return ResponseEntity.created(uriComponentsBuilder.pathSegment("{productId}").
+            return ResponseEntity.created(uriComponentsBuilder.pathSegment("catalog-api/products/{productId}").
                     buildAndExpand(product.getId()).toUri()).body(responseProduct);
         }
     }

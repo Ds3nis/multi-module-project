@@ -1,0 +1,5 @@
+selmag:
+  service:
+    catalog:
+      uri: http://localhost:54321
+

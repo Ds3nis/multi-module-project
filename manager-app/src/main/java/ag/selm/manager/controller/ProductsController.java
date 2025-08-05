@@ -27,7 +27,7 @@ public class ProductsController {
     }
 
     @GetMapping("create")
-    public String createProduct(){
+    public String getNewProductPage(){
         return "catalog/products/create";
     }
 

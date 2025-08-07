@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>View</title>
+</head>
+<body>
+<main class="main">
+    <div class="container">
+        <h1 data-th-text="${product.id()}">View product</h1>
+        <a class="link" data-th-href="@{/catalog/products/list}">Product catalog</a>
+        <h2 class="product-title" data-th-text="${product.title()}"></h2>
+        <p class="product-details" data-th-text="${product.details()}"></p>
+        <a class="edit-link" data-th-href="@{/catalog/products/{productId}/edit(productId=${product.id()})}">Edit product</a>
+        <form method="post" class="add-to-favorite-form" data-th-action="@{/catalog/products/{productId}/add-to-favorite(productId=${product.id()})}"
+        data-th-if="${!isFavorite}">
+            <button type="submit" class="add-to-favorite-form__btn">Add to favorite</button>
+        </form>
+        <form method="post" class="remove-from-favorite-form" data-th-action="@{/catalog/products/{productId}/remove-from-favorite(productId=${product.id()})}"
+        data-th-if="${isFavorite}">
+            <button type="submit" class="remove-from-favorite-form__btn">Remove from favorite</button>
+        </form>
+    </div>
+    <section class="reviews">
+        <div class="reviews__errors" data-th-if="${errors}">
+            <ul class="errors__list">
+                <li class="errors__item" data-th-each="error : ${errors}" data-th-text="${error}">
+                </li>
+            </ul>
+        </div>
+        <h2>Reviews</h2>
+        <form class="add-review-form" method="post"
+              th:action="@{/catalog/products/{productId}/create-review(productId=${product.id()})}">
+
+            <input type="radio" name="rating" value="1"
+                   th:checked="${newProductReviewDto?.rating() == 1}">
+            <input type="radio" name="rating" value="2"
+                   th:checked="${newProductReviewDto?.rating() == 2}">
+            <input type="radio" name="rating" value="3"
+                   th:checked="${newProductReviewDto?.rating() == 3}">
+            <input type="radio" name="rating" value="4"
+                   th:checked="${newProductReviewDto?.rating() == 4}">
+            <input type="radio" name="rating" value="5"
+                   th:checked="${newProductReviewDto?.rating() == 5}">
+
+            <textarea class="add-review-form__textarea" name="review"
+                      th:text="${newProductReviewDto?.review()}" placeholder="Add review"></textarea>
+
+            <button type="submit" class="add-review-form__btn">Add review</button>
+        </form>
+
+        <div class="reviews__list">
+            <div class="review" data-th-each="review : ${reviews}">
+                <h3 class="review__rating">[[${review.getRating()}]]*</h3>
+                <p class="review__text" data-th-text="${review.getReview()}"></p>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

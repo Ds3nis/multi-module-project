@@ -14,6 +14,7 @@
     <modules>
         <module>manager-app</module>
         <module>catalog-service</module>
+        <module>customer-app</module>
     </modules>
 
     <properties>

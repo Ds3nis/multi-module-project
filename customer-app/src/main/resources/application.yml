@@ -1,0 +1,11 @@
+server:
+  port: 8082
+
+selmag:
+  service:
+    catalog:
+      uri: http://localhost:8080
+
+spring:
+  messages:
+    basename: messages

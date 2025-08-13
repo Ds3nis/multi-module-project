@@ -1,7 +1,6 @@
-package ag.selm.customer.repository;
+package ag.selm.feedback.repository;
 
-import ag.selm.customer.entity.FavoriteProduct;
-import org.springframework.stereotype.Repository;
+import ag.selm.feedback.entity.FavoriteProduct;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -14,6 +13,8 @@ public interface FavoriteProductsRepository {
     Mono<FavoriteProduct> save(FavoriteProduct favoriteProduct);
 
     boolean isFavoriteProductByProductId(int productId);
+
+    Mono<FavoriteProduct> findByProductId(int productId);
 
     Flux<FavoriteProduct> findAll();
 }

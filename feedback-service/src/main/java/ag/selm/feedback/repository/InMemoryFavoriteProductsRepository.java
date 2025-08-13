@@ -1,6 +1,6 @@
-package ag.selm.customer.repository;
+package ag.selm.feedback.repository;
 
-import ag.selm.customer.entity.FavoriteProduct;
+import ag.selm.feedback.entity.FavoriteProduct;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import reactor.core.publisher.Flux;
@@ -12,6 +12,12 @@ import java.util.*;
 public class InMemoryFavoriteProductsRepository implements FavoriteProductsRepository{
 
     private List<FavoriteProduct> favoriteProducts = Collections.synchronizedList(new LinkedList<>());
+
+    @Override
+    public Mono<FavoriteProduct> findByProductId(int productId) {
+        return Flux.fromIterable(favoriteProducts)
+                .filter(favoriteProduct -> favoriteProduct.getProductId() == productId).next();
+    }
 
     @Override
     public boolean isFavoriteProductByProductId(int productId) {

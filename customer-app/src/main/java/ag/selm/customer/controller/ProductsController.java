@@ -1,9 +1,8 @@
 package ag.selm.customer.controller;
 
+import ag.selm.customer.client.FavoriteProductsClient;
 import ag.selm.customer.client.ProductsClient;
 import ag.selm.customer.entity.FavoriteProduct;
-import ag.selm.customer.entity.Product;
-import ag.selm.customer.service.FavoriteProductsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +17,7 @@ public class ProductsController {
 
     private final ProductsClient productsClient;
 
-    private final FavoriteProductsService favoriteProductsService;
+    private final FavoriteProductsClient favoriteProductsService;
 
     @GetMapping("list")
     public Mono<String> getAllProductsPage(Model model){
@@ -26,11 +25,11 @@ public class ProductsController {
                 .collectList()
                 .doOnNext(products -> model.addAttribute("products", products))
                 .thenReturn("catalog/products/list");
-    }
+    } 
 
     @GetMapping("favorite-products")
     public Mono<String> getFavoriteProductsPage(Model model){
-        return this.favoriteProductsService.findAllFavoriteProducts()
+        return this.favoriteProductsService.getFavoriteProducts()
                 .map(FavoriteProduct::getProductId)
                 .collectList()
                 .flatMap(favoriteProductsId -> productsClient.getProducts().filter(

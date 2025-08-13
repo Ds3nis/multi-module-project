@@ -1,4 +1,4 @@
-package ag.selm.customer.extension;
+package ag.selm.customer.exception;
 
 public class CustomNoSuchElementException extends NoSuchFieldException{
 

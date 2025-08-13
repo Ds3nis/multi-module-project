@@ -1,25 +1,29 @@
 package ag.selm.customer.controller;
 
+import ag.selm.customer.client.FavoriteProductsClient;
+import ag.selm.customer.client.ProductReviewsClient;
 import ag.selm.customer.client.ProductsClient;
+import ag.selm.customer.dto.NewFavoriteProductDto;
 import ag.selm.customer.dto.NewProductReviewDto;
+import ag.selm.customer.entity.FavoriteProduct;
 import ag.selm.customer.entity.Product;
-import ag.selm.customer.extension.CustomNoSuchElementException;
-import ag.selm.customer.service.DefaultFavoriteProductsService;
-import ag.selm.customer.service.FavoriteProductsService;
-import ag.selm.customer.service.ProductReviewService;
+import ag.selm.customer.entity.ProductReview;
+import ag.selm.customer.exception.ClientBadRequestException;
+import ag.selm.customer.exception.CustomNoSuchElementException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.util.NoSuchElementException;
+import java.time.Duration;
+import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("catalog/products/{productId:\\d+}")
 @RequiredArgsConstructor
@@ -27,9 +31,9 @@ public class ProductController {
 
     private final ProductsClient productsClient;
 
-    private final FavoriteProductsService favoriteProductsService;
+    private final FavoriteProductsClient favoriteProductsService;
 
-    private final ProductReviewService productReviewService;
+    private final ProductReviewsClient productReviewService;
 
     @ModelAttribute(value = "product", binding = false)
     public Mono<Product> product(@PathVariable("productId") Integer productId){
@@ -37,9 +41,16 @@ public class ProductController {
     }
 
     @PostMapping("add-to-favorite")
-    public Mono<String> addToFavorites(@ModelAttribute("product") Mono<Product> product){
-        return product.map(Product::id).flatMap(favoriteProductId -> favoriteProductsService.addToFavorites(favoriteProductId)
-                .thenReturn("redirect:/catalog/products/%d".formatted(favoriteProductId)));
+    public Mono<String> addToFavorites(@ModelAttribute("product") Mono<Product> product, Model model){
+        return product.map(Product::id).flatMap(favoriteProductId -> favoriteProductsService.addToFavorites(new NewFavoriteProductDto(favoriteProductId))
+                .thenReturn("redirect:/catalog/products/%d".formatted(favoriteProductId))
+                .onErrorResume(exception -> {
+                            log.error(exception.getMessage(), exception);
+                            return Mono.just("redirect:/catalog/products/%d".formatted(favoriteProductId));
+                        }
+                )
+
+        );
     }
 
     @PostMapping("remove-from-favorite")
@@ -48,34 +59,51 @@ public class ProductController {
                 .thenReturn("redirect:/catalog/products/%d".formatted(product.block().id()));
     }
 
-    @GetMapping()
+    @GetMapping
     public Mono<String> getProductPage(@PathVariable("productId") Integer productId, Model model) {
-        return Mono.fromCallable(() -> favoriteProductsService.isFavoriteProduct(productId))
-                .subscribeOn(Schedulers.boundedElastic())
-                .doOnNext(isFavorite -> model.addAttribute("isFavorite", isFavorite))
-                .then(productReviewService.getReviewsByProductId(productId).collectList())
-                .doOnNext(reviews -> model.addAttribute("reviews", reviews))
+        Mono<Boolean> isFavoriteMono = favoriteProductsService.findFavoriteProductByProductId(productId)
+                .hasElement(); // повертає Mono<Boolean>
+
+        Mono<List<ProductReview>> reviewsMono = productReviewService.findProductReviewsByProductId(productId)
+                .collectList();
+
+        return Mono.zip(reviewsMono, isFavoriteMono)
+                .doOnNext(tuple -> {
+                    List<ProductReview> reviews = tuple.getT1();
+                    Boolean isFavorite = tuple.getT2(); // Отримуємо Boolean значення
+
+                    model.addAttribute("reviews", reviews);
+                    model.addAttribute("isFavorite", isFavorite); // Додаємо в модель
+                })
                 .thenReturn("catalog/products/view");
     }
 
 
+
+
     @PostMapping("create-review")
     public Mono<String> createProductReview(@PathVariable("productId") Integer productId,
-                                            @Validated NewProductReviewDto review,
+                                            NewProductReviewDto review,
                                             BindingResult bindingResult, Model model){
-        if (bindingResult.hasErrors()){
-            model.addAttribute("isFavorite", false);
-            model.addAttribute("newProductReviewDto", review);
-            model.addAttribute("errors", bindingResult.getAllErrors()
-                    .stream().map(ObjectError::getDefaultMessage).toList());
-            return Mono.fromCallable(() -> favoriteProductsService.isFavoriteProduct(productId))
-                    .subscribeOn(Schedulers.boundedElastic())
-                    .doOnNext(isFavorite -> model.addAttribute("isFavorite", isFavorite))
-                    .thenReturn("catalog/products/view");
-        }else{
-            return productReviewService.createReview(productId, review.rating(), review.review())
-                    .thenReturn("redirect:/catalog/products/%d".formatted(productId));
-        }
+            return productReviewService.createProductReview(review)
+                    .thenReturn("redirect:/catalog/products/%d".formatted(productId))
+                    .onErrorResume(
+                            ClientBadRequestException.class,
+                            exception -> {
+                                model.addAttribute("isFavorite", false);
+                                model.addAttribute("newProductReviewDto", review);
+                                model.addAttribute("errors", exception.getErrors());
+                                return favoriteProductsService.findFavoriteProductByProductId(productId)
+                                        .map(favoriteProduct -> {
+                                            model.addAttribute("isFavorite", true);
+                                            return "catalog/products/view";
+                                        })
+                                        .switchIfEmpty(Mono.fromCallable(() -> {
+                                            model.addAttribute("isFavorite", false);
+                                            return "catalog/products/view";
+                                        }));
+                            }
+                    );
     }
 
     @ExceptionHandler(CustomNoSuchElementException.class)

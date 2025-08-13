@@ -5,6 +5,8 @@ selmag:
   service:
     catalog:
       uri: http://localhost:8080
+  feedback:
+      uri: http://localhost:8083
 
 spring:
   messages:

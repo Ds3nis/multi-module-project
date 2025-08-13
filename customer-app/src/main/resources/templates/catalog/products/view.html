@@ -15,6 +15,7 @@
         <h2 class="product-title" data-th-text="${product.title()}"></h2>
         <p class="product-details" data-th-text="${product.details()}"></p>
         <a class="edit-link" data-th-href="@{/catalog/products/{productId}/edit(productId=${product.id()})}">Edit product</a>
+        <h1 data-th-text="${isFavorite}"></h1>
         <form method="post" class="add-to-favorite-form" data-th-action="@{/catalog/products/{productId}/add-to-favorite(productId=${product.id()})}"
         data-th-if="${!isFavorite}">
             <button type="submit" class="add-to-favorite-form__btn">Add to favorite</button>

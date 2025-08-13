@@ -1,7 +1,7 @@
-package ag.selm.customer.service;
+package ag.selm.feedback.service;
 
-import ag.selm.customer.entity.FavoriteProduct;
-import ag.selm.customer.repository.FavoriteProductsRepository;
+import ag.selm.feedback.entity.FavoriteProduct;
+import ag.selm.feedback.repository.FavoriteProductsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -16,14 +16,19 @@ public class DefaultFavoriteProductsService implements FavoriteProductsService{
     private final FavoriteProductsRepository favoriteProductsRepository;
 
     @Override
+    public Mono<FavoriteProduct> findFavoriteProductByProductId(int productId) {
+        return this.favoriteProductsRepository.findByProductId(productId);
+    }
+
+    @Override
     public Mono<?> removeFromFavorites(int productId) {
         favoriteProductsRepository.deleteByProductId(productId);
         return Mono.empty();
     }
 
     @Override
-    public Mono<FavoriteProduct> addToFavorites(int productId) {
-        return favoriteProductsRepository.save(new FavoriteProduct(UUID.randomUUID(), productId));
+    public Mono<FavoriteProduct> addToFavorites(FavoriteProduct favoriteProduct) {
+        return favoriteProductsRepository.save(favoriteProduct);
     }
 
     @Override

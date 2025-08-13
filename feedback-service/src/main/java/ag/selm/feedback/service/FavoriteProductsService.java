@@ -10,7 +10,7 @@ public interface FavoriteProductsService {
 
     Mono<FavoriteProduct> addToFavorites(FavoriteProduct favoriteProduct);
 
-    boolean isFavoriteProduct(int productId);
+//    boolean isFavoriteProduct(int productId);
 
     Mono<FavoriteProduct> findFavoriteProductByProductId(int productId);
 

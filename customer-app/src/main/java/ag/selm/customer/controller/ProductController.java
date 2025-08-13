@@ -22,6 +22,7 @@ import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -42,7 +43,7 @@ public class ProductController {
 
     @PostMapping("add-to-favorite")
     public Mono<String> addToFavorites(@ModelAttribute("product") Mono<Product> product, Model model){
-        return product.map(Product::id).flatMap(favoriteProductId -> favoriteProductsService.addToFavorites(new NewFavoriteProductDto(favoriteProductId))
+        return product.map(Product::id).flatMap(favoriteProductId -> favoriteProductsService.addToFavorites(new NewFavoriteProductDto(UUID.randomUUID() ,favoriteProductId))
                 .thenReturn("redirect:/catalog/products/%d".formatted(favoriteProductId))
                 .onErrorResume(exception -> {
                             log.error(exception.getMessage(), exception);

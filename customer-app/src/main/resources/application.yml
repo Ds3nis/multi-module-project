@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8084
 
 selmag:
   service:
@@ -11,3 +11,18 @@ selmag:
 spring:
   messages:
     basename: messages
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8082/realms/selmag
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: customer-app
+            client-secret: xcOHOU04OclR0jeP0QBUBvpFJnY4QP8B
+            scope:
+              - openid
+              - view-catalog
+

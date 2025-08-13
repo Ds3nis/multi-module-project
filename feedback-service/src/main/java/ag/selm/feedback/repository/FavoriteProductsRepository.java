@@ -1,20 +1,21 @@
 package ag.selm.feedback.repository;
 
 import ag.selm.feedback.entity.FavoriteProduct;
-import reactor.core.publisher.Flux;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
 
-public interface FavoriteProductsRepository {
+
+public interface FavoriteProductsRepository extends ReactiveCrudRepository<FavoriteProduct, UUID> {
 
 
-    Mono<Void> deleteByProductId(int productId);
+    void deleteByProductId(int productId);
 
-    Mono<FavoriteProduct> save(FavoriteProduct favoriteProduct);
 
-    boolean isFavoriteProductByProductId(int productId);
+//    boolean isFavoriteProductByProductId(int productId);
 
     Mono<FavoriteProduct> findByProductId(int productId);
 
-    Flux<FavoriteProduct> findAll();
 }

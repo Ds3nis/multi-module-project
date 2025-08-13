@@ -31,10 +31,10 @@ public class DefaultFavoriteProductsService implements FavoriteProductsService{
         return favoriteProductsRepository.save(favoriteProduct);
     }
 
-    @Override
-    public boolean isFavoriteProduct(int productId) {
-        return favoriteProductsRepository.isFavoriteProductByProductId(productId);
-    }
+//    @Override
+//    public boolean isFavoriteProduct(int productId) {
+//        return favoriteProductsRepository.isFavoriteProductByProductId(productId);
+//    }
 
     @Override
     public Flux<FavoriteProduct> findAllFavoriteProducts() {
